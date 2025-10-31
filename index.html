@@ -24,25 +24,35 @@
     color:#fff;
     text-align:center;
     padding:10px 20px;
-    font-size:1.05em;
+    font-size:1.0em;
     font-weight:600;
     border-radius:12px;
     box-shadow:0 6px 20px rgba(0,0,0,.3);
     position:sticky;
     top:10px;
     z-index:120;
-    letter-spacing:1px;
+    letter-spacing:0px;
     transition:.3s;
   }
 
   .shop-name-wrapper{display:flex;justify-content:center;align-items:center;margin:18px 0}
   .shop-name{
-    font-size:2.2em;font-weight:700;padding:20px 40px;border-radius:18px;
-    background:linear-gradient(153deg,#f8f8f8,#eaeaea);
-    color:#000;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
-    border:2px solid #000;
+    font-size:1.3em;
+    font-weight:70;
+    padding:20px 40px;
+    border-radius:18px;
+    background:linear-gradient(90deg,#1e1e1e 0%,#3a3a3a 35%,#d4af37 100%);
+    color:#fff;
+    text-shadow:0 2px 5px rgba(0,0,0,0.3);
+    box-shadow:0 10px 30px rgba(255,215,0,0.3);
+    border:2px solid #fff;
     text-align:center;
+    transition:.3s;
+    animation:glow 3s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { box-shadow:0 0 15px rgba(255,215,0,0.3); }
+    to { box-shadow:0 0 30px rgba(255,215,0,0.6); }
   }
 
   .container{
@@ -107,10 +117,46 @@
   }
 
   #productPage{display:none;padding:16px;min-height:70vh}
-  .productPageWrapper{display:flex;gap:20px;align-items:flex-start;justify-content:center}
-  .imagesColumn{flex:1;display:flex;flex-direction:column;gap:12px;max-width:720px}
-  .imagesColumn .imgWrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-  .imagesColumn img{width:100%;height:auto;max-height:calc(100vh - 220px);object-fit:contain;display:block;cursor:pointer;}
+  .productPageWrapper{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+
+  .imagesColumn{
+    flex:1;
+    display:flex;
+    gap:16px;
+    max-width:800px;
+  }
+  .imagesColumn .imgWrap{
+    flex:1;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    opacity:0;
+    transform:translateY(20px);
+    animation:fadeSlide 0.5s forwards;
+  }
+  .imagesColumn .imgWrap:nth-child(1){animation-delay:0.1s;}
+  .imagesColumn .imgWrap:nth-child(2){animation-delay:0.3s;}
+
+  @keyframes fadeSlide{
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .imagesColumn img{
+    width:100%;
+    height:auto;
+    max-height:calc(100vh - 180px);
+    object-fit:contain;
+    display:block;
+    cursor:pointer;
+    border-radius:12px;
+  }
 
   .fullscreen-view{
     position:fixed;
@@ -153,7 +199,6 @@
   .bigBtn:hover{transform:scale(1.05);}
   .bigBtn:active{transform:translateY(1px)}
   .phone{display:none;}
-
   .share-note{font-size:0.82em;color:#666;text-align:center;padding-top:6px}
 
   .product-desc-frame{
@@ -171,12 +216,13 @@
     .product img{max-height:180px}
     .productPageWrapper{flex-direction:column;align-items:center}
     .orderColumn{width:92%;position:static;top:auto}
-    .imagesColumn img{max-height:45vh}
+    .imagesColumn{flex-direction:row;gap:12px}
+    .imagesColumn img{max-height:50vh}
   }
   @media (max-width:480px){
     .container{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
     .product img{max-height:160px}
-    .imagesColumn img{max-height:40vh}
+    .imagesColumn img{max-height:45vh}
     .bigBtn{padding:12px 18px;font-size:1em}
   }
 </style>
@@ -187,7 +233,7 @@
 <body>
 
 <header id="mainHeader">WELCOME</header>
-<div class="shop-name-wrapper" id="shopNameWrapper"><div class="shop-name">Data Slow</div></div>
+<div class="shop-name-wrapper" id="shopNameWrapper"><div class="shop-name" id="shopNameDiv">Network Problem</div></div>
 
 <div id="home" class="container"></div>
 
@@ -223,18 +269,27 @@ let products = [];
 let whatsappNumber = "8801000000000";
 let shopName = "বিসমিল্লাহ খেলাঘর";
 let headerText = "আসসালামু আলাইকুম";
+
 const homeContainer = document.getElementById('home');
 const header = document.getElementById("mainHeader");
+const shopNameDiv = document.getElementById("shopNameDiv");
 
+// Firebase থেকে ডেটা লোড
 db.ref("products").on("value", s=>{
-  const val=s.val();
-  if(!val) products=[];
-  else if(Array.isArray(val)) products=val.filter(Boolean);
-  else products=Object.keys(val).map(k=>val[k]);
+  const val = s.val();
+  if(!val) products = [];
+  else if(Array.isArray(val)) products = val.filter(Boolean);
+  else products = Object.keys(val).map(k=>val[k]);
   renderProducts();
 });
+
 db.ref("whatsappNumber").on("value", s=>{if(s.val()) whatsappNumber=s.val();});
-db.ref("shopName").on("value", s=>{if(s.val()){shopName=s.val();document.querySelector(".shop-name").innerText=shopName;}});
+db.ref("shopName").on("value", s=>{
+  if(s.val()){
+    shopName=s.val();
+    shopNameDiv.innerText = shopName;
+  }
+});
 db.ref("headerText").on("value", s=>{
   if(s.val()){
     headerText=s.val();
@@ -242,6 +297,7 @@ db.ref("headerText").on("value", s=>{
   }
 });
 
+// Products render করা
 function renderProducts(){
   homeContainer.innerHTML='';
   products.forEach((p,i)=>{
@@ -255,31 +311,33 @@ function renderProducts(){
   });
 }
 
+// Product page দেখানো
 function showProductPage(i){
-  const p=products[i]; if(!p) return;
+  const p = products[i]; if(!p) return;
   document.getElementById('home').style.display='none';
   document.getElementById('productPage').style.display='block';
   document.getElementById('mainHeader').style.display='none';
   document.getElementById('shopNameWrapper').style.display='none';
-  const descFrame=document.getElementById('productDescFrame');
-  descFrame.innerHTML='';
-  const descBox=document.createElement('div');
+
+  const descFrame = document.getElementById('productDescFrame');
+  descFrame.innerHTML = '';
+  const descBox = document.createElement('div');
   descBox.className='product-desc-frame';
-  descBox.textContent=p.desc||'এই পণ্যের সম্পর্কে এখনো কোনো বিবরণ নেই।';
+  descBox.textContent = p.desc || 'এই পণ্যের সম্পর্কে এখনো কোনো বিবরণ নেই।';
   descFrame.appendChild(descBox);
 
-  const col=document.getElementById('detailImagesColumn');
-  col.innerHTML='';
-  const imgs=[p.detailImg1,p.detailImg2];
-  if(!imgs[0]&&p.homeImg) imgs[0]=p.homeImg;
-  if(!imgs[1]&&p.homeImg) imgs[1]=p.homeImg;
+  const col = document.getElementById('detailImagesColumn');
+  col.innerHTML = '';
+  const imgs = [p.detailImg1, p.detailImg2];
+  if(!imgs[0] && p.homeImg) imgs[0]=p.homeImg;
+  if(!imgs[1] && p.homeImg) imgs[1]=p.homeImg;
   imgs.forEach((url,j)=>{
-    const wrap=document.createElement('div');wrap.className='imgWrap';
-    const img=document.createElement('img');
+    const wrap = document.createElement('div'); wrap.className='imgWrap';
+    const img = document.createElement('img');
     img.src=url||'https://via.placeholder.com/800x600?text=No+Image';
     img.alt=`${p.name}-${j+1}`;
     img.onclick=()=>openFullscreen(img.src);
-    wrap.appendChild(img);col.appendChild(wrap);
+    wrap.appendChild(img); col.appendChild(wrap);
   });
 
   document.getElementById('detailName').innerText=p.name||'Product';
@@ -291,6 +349,7 @@ function showProductPage(i){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// Fullscreen view
 function openFullscreen(src){
   const full=document.createElement('div');
   full.className='fullscreen-view closeable';
@@ -299,12 +358,12 @@ function openFullscreen(src){
   document.body.appendChild(full);
   history.pushState({page:"fullscreen"},"","#fullscreen");
 }
-
 function closeFullscreen(){
   const full=document.querySelector('.fullscreen-view');
   if(full) document.body.removeChild(full);
 }
 
+// Back function
 function goBack(){
   const full=document.querySelector('.fullscreen-view');
   if(full){
