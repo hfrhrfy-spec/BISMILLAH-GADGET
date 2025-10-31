@@ -6,58 +6,161 @@
 <title>𝐊ᴀ𝐰sᴀʀ</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
-  body{background:#f5f5f5;color:#222;min-height:100vh}
+  body{
+    min-height:100vh;
+    color:#222;
+    background:linear-gradient(135deg,#e0e0e0 0%,#c9c9c9 100%);
+    animation:fadeBg 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes fadeBg{
+    0%{background:linear-gradient(135deg,#e0e0e0 0%,#c9c9c9 100%);}
+    50%{background:linear-gradient(135deg,#d7d7d7 0%,#bfbfbf 100%);}
+    100%{background:linear-gradient(135deg,#ebebeb 0%,#d0d0d0 100%);}
+  }
 
   header{
-    background:#fff;
-    color:#000;
+    background:linear-gradient(90deg,#1e1e1e 0%,#3a3a3a 35%,#d4af37 100%);
+    color:#fff;
     text-align:center;
     padding:10px 20px;
-    font-size:1.1em;
+    font-size:1.05em;
     font-weight:600;
-    border:2px solid #000;
     border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,.12);
+    box-shadow:0 6px 20px rgba(0,0,0,.3);
     position:sticky;
     top:10px;
     z-index:120;
+    letter-spacing:1px;
     transition:.3s;
   }
 
   .shop-name-wrapper{display:flex;justify-content:center;align-items:center;margin:18px 0}
   .shop-name{
-    font-size:2em;font-weight:700;padding:18px 36px;border-radius:18px;
-    background:#fff;color:#000;box-shadow:0 8px 20px rgba(0,0,0,.12);
-    border:2px solid #000;text-align:center;
+    font-size:2.2em;font-weight:700;padding:20px 40px;border-radius:18px;
+    background:linear-gradient(153deg,#f8f8f8,#eaeaea);
+    color:#000;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    border:2px solid #000;
+    text-align:center;
   }
 
-  .container{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:15px;margin-top:8px}
-  .product{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 3px 6px rgba(0,0,0,.08);transition:.25s;cursor:pointer}
-  .product:hover{transform:translateY(-6px)}
-  .product img{width:100%;height:auto;max-height:250px;object-fit:contain;}
-  .product-info{padding:10px;text-align:center}
-  .product-info h3{font-size:0.95em;margin-bottom:6px}
-  .product-info p{color:#555;font-size:0.87em}
+  .container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:16px;
+    padding:20px;
+    margin-top:8px;
+  }
+
+  .product{
+    background:linear-gradient(145deg,#ffffff,#f1f1f1);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    transition:all .3s ease;
+    cursor:pointer;
+    border:2px solid rgba(0,0,0,0.05);
+    position:relative;
+  }
+  .product:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 12px 26px rgba(0,0,0,0.18);
+    background:linear-gradient(145deg,#fefefe,#fafafa);
+  }
+
+  .product::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    background:radial-gradient(circle at 30% 30%,rgba(255,192,203,0.4),transparent 60%),
+               radial-gradient(circle at 70% 70%,rgba(135,206,250,0.4),transparent 60%);
+    opacity:0;
+    transition:opacity .4s ease;
+  }
+  .product:hover::before{opacity:1;}
+
+  .product img{
+    width:100%;
+    height:180px;
+    object-fit:contain;
+    transition:.3s;
+  }
+  .product:hover img{transform:scale(1.07);}
+
+  .product-info{
+    padding:12px 10px;
+    text-align:center;
+    background:rgba(255,255,255,0.85);
+  }
+  .product-info h3{
+    font-size:1em;
+    font-weight:600;
+    margin-bottom:6px;
+    color:#111;
+  }
+  .product-info p{
+    color:#ff007f;
+    font-weight:700;
+    font-size:0.95em;
+  }
 
   #productPage{display:none;padding:16px;min-height:70vh}
   .productPageWrapper{display:flex;gap:20px;align-items:flex-start;justify-content:center}
   .imagesColumn{flex:1;display:flex;flex-direction:column;gap:12px;max-width:720px}
   .imagesColumn .imgWrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-  .imagesColumn img{width:100%;height:auto;max-height:calc(100vh - 220px);object-fit:contain;display:block;}
+  .imagesColumn img{width:100%;height:auto;max-height:calc(100vh - 220px);object-fit:contain;display:block;cursor:pointer;}
 
-  .orderColumn{width:320px;background:linear-gradient(180deg,#ffffff,#fbfbfb);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:12px;align-items:center;position:sticky;top:84px;height:fit-content}
+  .fullscreen-view{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    animation:fadeIn .3s ease;
+  }
+  .fullscreen-view img{
+    max-width:95%;
+    max-height:95%;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(255,255,255,0.3);
+  }
+  .fullscreen-view.closeable{cursor:pointer;}
+
+  .orderColumn{
+    width:320px;
+    background:linear-gradient(180deg,#ffffff,#fbfbfb);
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+    display:flex;flex-direction:column;gap:12px;align-items:center;
+    position:sticky;top:84px;height:fit-content
+  }
   .orderColumn h2{font-size:1.25em;text-align:center}
   .orderColumn .price{font-weight:700;font-size:1.05em;color:#111}
   .orderColumn .desc{font-size:0.95em;color:#444;text-align:center}
-  .bigBtn{display:inline-block;background:#25D366;color:#fff;padding:14px 22px;border-radius:30px;text-decoration:none;font-weight:700;font-size:1.05em;box-shadow:0 6px 18px rgba(37,211,102,.18);border:2px solid rgba(0,0,0,0.03)}
+  .bigBtn{
+    display:inline-block;
+    background:linear-gradient(135deg,#25D366,#128C7E);
+    color:#fff;padding:14px 22px;border-radius:30px;
+    text-decoration:none;font-weight:700;font-size:1.05em;
+    box-shadow:0 8px 18px rgba(37,211,102,.25);
+    border:none;transition:.3s;
+  }
+  .bigBtn:hover{transform:scale(1.05);}
   .bigBtn:active{transform:translateY(1px)}
   .phone{display:none;}
-  .backRow{display:flex;gap:10px;width:100%;justify-content:space-between;align-items:center;margin-bottom:15px}
-  .back-btn{background:#333;color:#fff;padding:8px 12px;border-radius:10px;border:none;cursor:pointer}
+
   .share-note{font-size:0.82em;color:#666;text-align:center;padding-top:6px}
 
   .product-desc-frame{
-    background:#fff;border:2px solid #000;box-shadow:0 5px 20px rgba(0,0,0,0.1);
+    background:linear-gradient(135deg,#7f00ff,#e100ff);
+    color:#fff;
+    border:none;
+    box-shadow:0 5px 20px rgba(127,0,255,0.4);
     padding:15px 20px;border-radius:14px;text-align:center;font-size:1em;font-weight:500;
     margin-bottom:25px;animation:fadeIn .4s ease;
   }
@@ -65,14 +168,14 @@
 
   @media (max-width:880px){
     .container{grid-template-columns:repeat(2,1fr)}
-    .product img{max-height:200px}
+    .product img{max-height:180px}
     .productPageWrapper{flex-direction:column;align-items:center}
     .orderColumn{width:92%;position:static;top:auto}
     .imagesColumn img{max-height:45vh}
   }
   @media (max-width:480px){
     .container{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-    .product img{max-height:180px}
+    .product img{max-height:160px}
     .imagesColumn img{max-height:40vh}
     .bigBtn{padding:12px 18px;font-size:1em}
   }
@@ -83,17 +186,12 @@
 </head>
 <body>
 
-<header id="mainHeader">Jast waiting</header>
-<div class="shop-name-wrapper" id="shopNameWrapper"><div class="shop-name">WELCOME</div></div>
+<header id="mainHeader">WELCOME</header>
+<div class="shop-name-wrapper" id="shopNameWrapper"><div class="shop-name">Data Slow</div></div>
 
 <div id="home" class="container"></div>
 
 <div id="productPage">
-  <div class="backRow">
-    <button class="back-btn" onclick="goBack()">← Back</button>
-    <div style="font-weight:600;color:#333">Product Details</div>
-    <div style="width:36px"></div>
-  </div>
   <div id="productDescFrame"></div>
   <div class="productPageWrapper">
     <div class="imagesColumn" id="detailImagesColumn"></div>
@@ -126,6 +224,7 @@ let whatsappNumber = "8801000000000";
 let shopName = "বিসমিল্লাহ খেলাঘর";
 let headerText = "আসসালামু আলাইকুম";
 const homeContainer = document.getElementById('home');
+const header = document.getElementById("mainHeader");
 
 db.ref("products").on("value", s=>{
   const val=s.val();
@@ -136,7 +235,12 @@ db.ref("products").on("value", s=>{
 });
 db.ref("whatsappNumber").on("value", s=>{if(s.val()) whatsappNumber=s.val();});
 db.ref("shopName").on("value", s=>{if(s.val()){shopName=s.val();document.querySelector(".shop-name").innerText=shopName;}});
-db.ref("headerText").on("value", s=>{if(s.val()){headerText=s.val();document.getElementById("mainHeader").innerText=headerText;}});
+db.ref("headerText").on("value", s=>{
+  if(s.val()){
+    headerText=s.val();
+    if(header.innerText!==headerText){header.innerText=headerText;}
+  }
+});
 
 function renderProducts(){
   homeContainer.innerHTML='';
@@ -171,9 +275,10 @@ function showProductPage(i){
   if(!imgs[1]&&p.homeImg) imgs[1]=p.homeImg;
   imgs.forEach((url,j)=>{
     const wrap=document.createElement('div');wrap.className='imgWrap';
-    const img=document.createElement('img');img.src=url||'https://via.placeholder.com/800x600?text=No+Image';
-    img.alt=`${p.name}-${j+1}`;img.style.cursor='zoom-in';
-    img.onclick=()=>window.open(img.src,'_blank');
+    const img=document.createElement('img');
+    img.src=url||'https://via.placeholder.com/800x600?text=No+Image';
+    img.alt=`${p.name}-${j+1}`;
+    img.onclick=()=>openFullscreen(img.src);
     wrap.appendChild(img);col.appendChild(wrap);
   });
 
@@ -182,12 +287,30 @@ function showProductPage(i){
   const msg=encodeURIComponent(`Hello! I want to order: ${p.name||''} (${p.price||''})`);
   document.getElementById('orderBtn').href=`https://wa.me/${sanitizePhone(whatsappNumber)}?text=${msg}`;
 
-  // history push করে যাতে ব্যাক বাটন এক ধাপ পিছে যায়
   history.pushState({page:"product"},"","#product");
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+function openFullscreen(src){
+  const full=document.createElement('div');
+  full.className='fullscreen-view closeable';
+  full.innerHTML=`<img src="${src}" alt="Full Image">`;
+  full.onclick=()=>closeFullscreen();
+  document.body.appendChild(full);
+  history.pushState({page:"fullscreen"},"","#fullscreen");
+}
+
+function closeFullscreen(){
+  const full=document.querySelector('.fullscreen-view');
+  if(full) document.body.removeChild(full);
+}
+
 function goBack(){
+  const full=document.querySelector('.fullscreen-view');
+  if(full){
+    closeFullscreen();
+    return;
+  }
   document.getElementById('productPage').style.display='none';
   document.getElementById('home').style.display='grid';
   document.getElementById('mainHeader').style.display='block';
@@ -198,23 +321,23 @@ function goBack(){
 function sanitizePhone(p){if(!p)return'';return p.replace(/[^\d+]/g,'').replace(/^\+?88/,'88');}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-// ✅ Updated Back Button Logic
 window.addEventListener("popstate", e=>{
+  const full=document.querySelector('.fullscreen-view');
+  if(full){
+    closeFullscreen();
+    return;
+  }
   const productPage=document.getElementById("productPage");
-  const home=document.getElementById("home");
   if(productPage.style.display==="block"){
     goBack();
-    history.pushState(null,null,location.href); // আবার state বসানো যাতে পরের back এ অ্যাপ বন্ধ না হয়
   } else {
-    if(confirm("তুমি কি সত্যিই অ্যাপ থেকে বের হতে চাও?")){
-      window.close();
-    } else {
-      history.pushState(null,null,location.href);
-    }
+    document.getElementById('productPage').style.display='none';
+    document.getElementById('home').style.display='grid';
+    document.getElementById('mainHeader').style.display='block';
+    document.getElementById('shopNameWrapper').style.display='flex';
   }
 });
 
-// প্রথমবার অ্যাপ খোলার সময় history push
 window.onload=()=>{history.pushState(null,null,location.href);};
 </script>
 </body>
